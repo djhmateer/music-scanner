@@ -37,7 +37,7 @@ foreach (var artistDir in musicDir.GetDirectories().OrderBy(d => d.Name))
 }
 
 
-// test message
+// test message2
 
 foreach (var artist in artists)
 {
