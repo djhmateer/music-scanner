@@ -36,6 +36,9 @@ foreach (var artistDir in musicDir.GetDirectories().OrderBy(d => d.Name))
         artists.Add(new Artist(artistDir.Name, albums));
 }
 
+
+// test message
+
 foreach (var artist in artists)
 {
     Console.WriteLine(artist.Name);
