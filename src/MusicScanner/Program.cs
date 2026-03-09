@@ -13,6 +13,24 @@ using Anthropic;
 using Anthropic.Models.Messages;
 using Microsoft.Extensions.Configuration;
 
+// Parse --model flag (e.g. --model sonnet), defaults to haiku
+var modelArg = "haiku";
+for (var i = 0; i < args.Length - 1; i++)
+{
+    if (args[i] == "--model")
+        modelArg = args[i + 1].ToLowerInvariant();
+}
+
+var modelId = modelArg switch
+{
+    "haiku" => Model.ClaudeHaiku4_5,
+    "sonnet" => Model.ClaudeSonnet4_6,
+    "opus" => Model.ClaudeOpus4_6,
+    _ => throw new ArgumentException($"Unknown model: {modelArg}. Use haiku, sonnet, or opus.")
+};
+
+Console.WriteLine($"Using model: {modelArg}");
+
 var musicPath = Path.Combine(Directory.GetCurrentDirectory(), "music");
 var musicDir = new DirectoryInfo(musicPath);
 
@@ -145,15 +163,20 @@ var prompt = $"""
     {trackList}
 
     Respond with a simple list: each track on one line, followed by its categories in brackets.
-    For each category, add a confidence score 1-10 after a colon (10 = strongest fit).
-    Example: Artist — Track [Canonical:8, Wife Playlist:9, Kitchen Playlist:7]
+    For each category, add a confidence score 1-100 after a colon (100 = strongest fit).
+    IMPORTANT: Spread scores across the full 1-100 range within each category. Every track
+    should have a unique score per category — no ties. Think of it as a ranking: the #1 track
+    gets the highest score, and scores decrease from there.
+    Example: Artist — Track [Canonical:82, Wife Playlist:95, Kitchen Playlist:41]
     Only include tracks that fit at least one category. Be selective.
+    IMPORTANT: You MUST use ALL 11 categories listed above. Do not skip any category.
+    In particular, 80s Music and 90s Music are based on release decade — use them accurately.
     """;
 
 var client = new AnthropicClient() { ApiKey = apiKey };
 var parameters = new MessageCreateParams
 {
-    Model = Model.ClaudeHaiku4_5,
+    Model = modelId,
     MaxTokens = 8192,
     Messages = [new() { Role = Role.User, Content = prompt }]
 };
@@ -172,10 +195,15 @@ await foreach (var streamEvent in client.Messages.CreateStreaming(parameters))
 Console.WriteLine();
 
 // Parse response and copy tracks into category folders
-// Each line looks like: "Artist — Track [Cat1, Cat2]"
-var outputPath = Path.Combine(Directory.GetCurrentDirectory(), "output");
+// Each line looks like: "Artist — Track [Cat1:8, Cat2:7]"
+// Output goes into a model-specific folder (e.g. output/haiku/) so you can compare runs
+var outputPath = Path.Combine(Directory.GetCurrentDirectory(), "output", modelArg);
 if (Directory.Exists(outputPath))
     Directory.Delete(outputPath, recursive: true);
+Directory.CreateDirectory(outputPath);
+
+// Save raw response for review
+File.WriteAllText(Path.Combine(outputPath, "response.txt"), responseBuilder.ToString());
 
 var linePattern = new Regex(@"^(.+?)\s*[—–-]\s*(.+)\s+\[([^\]]+)\]\s*$", RegexOptions.Multiline);
 
@@ -199,6 +227,7 @@ var categoryFolders = new Dictionary<string, string>(StringComparer.OrdinalIgnor
     ["kids playlist"] = "Kids Playlist",
     ["chill"] = "Chill",
     ["chill / wind down"] = "Chill",
+    ["chill/wind down"] = "Chill",
     ["wind down"] = "Chill",
     ["road trip"] = "Road Trip",
     ["guilty pleasures"] = "Guilty Pleasures",
@@ -244,15 +273,22 @@ foreach (Match match in linePattern.Matches(responseBuilder.ToString()))
     }
 }
 
-// Second pass: copy tracks into folders, sorted by score (highest first), numbered sequentially
+// Second pass: copy tracks into folders, sorted by score (highest first)
+// Within the same score, tracks are interleaved by artist (round-robin) for variety
 var copiedCount = 0;
 foreach (var (folderName, tracks) in playlistTracks)
 {
     var destDir = Path.Combine(outputPath, folderName);
     Directory.CreateDirectory(destDir);
 
+    // Group by score, then interleave artists within each score group
+    var sorted = tracks
+        .GroupBy(t => t.Score)
+        .OrderByDescending(g => g.Key)
+        .SelectMany(InterleaveByArtist);
+
     var rank = 1;
-    foreach (var (score, artistName, sourceFile) in tracks.OrderByDescending(t => t.Score))
+    foreach (var (score, artistName, sourceFile) in sorted)
     {
         var destFile = Path.Combine(destDir, $"{rank:D2} {artistName} - {Path.GetFileName(sourceFile)}");
         if (!File.Exists(destFile))
@@ -261,6 +297,22 @@ foreach (var (folderName, tracks) in playlistTracks)
             copiedCount++;
         }
         rank++;
+    }
+}
+
+// Round-robin tracks by artist so no artist dominates a block of sequential numbers
+static IEnumerable<(int Score, string ArtistName, string SourceFile)> InterleaveByArtist(
+    IGrouping<int, (int Score, string ArtistName, string SourceFile)> group)
+{
+    var byArtist = group.GroupBy(t => t.ArtistName).Select(g => g.ToList()).ToList();
+    var maxCount = byArtist.Max(a => a.Count);
+    for (var i = 0; i < maxCount; i++)
+    {
+        foreach (var artistTracks in byArtist)
+        {
+            if (i < artistTracks.Count)
+                yield return artistTracks[i];
+        }
     }
 }
 
