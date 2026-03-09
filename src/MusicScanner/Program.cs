@@ -1,6 +1,12 @@
-// Music Scanner - scans a directory of music files organized as Artist/Album/Track
-// and prints a summary of all artists, albums, and tracks found.
-// Track filenames have their leading numbers stripped (e.g. "1-01 Dancing Queen.mp3" -> "Dancing Queen").
+// Music Scanner
+// =============
+// Scans a ./music directory organized as Artist/Album/Track (or Artist/Track for mixes).
+// Sends the track list to Claude for categorization, then copies tracks into playlist folders
+// under ./output (e.g. "Good Kitchen Playlist", "Wife Playlist").
+//
+// Track filenames have leading numbers stripped for display (e.g. "1-01 Dancing Queen.mp3" -> "Dancing Queen").
+// Matching Claude's output back to files uses normalized prefix matching to handle variations
+// like "- Remastered" or "[Live]" suffixes.
 
 using System.Text.RegularExpressions;
 using Anthropic;
@@ -15,31 +21,45 @@ if (!musicDir.Exists) throw new DirectoryNotFoundException($"Music directory not
 string[] musicExtensions = [".mp3", ".flac", ".m4a", ".wav", ".ogg", ".wma", ".aac"];
 var trackNumberPattern = new Regex(@"^\d+[-.\s]*\d*[-.\s]+"); // matches "1-01 ", "01 ", "1.01 " etc.
 
-// Walk the folder structure: Artist / Album / Track files
+// Scan music files from a directory, stripping track numbers from filenames to get clean titles
+List<Track> ScanTracks(DirectoryInfo dir)
+{
+    var tracks = new List<Track>();
+    foreach (var file in dir.GetFiles().OrderBy(f => f.Name))
+    {
+        if (!musicExtensions.Contains(file.Extension.ToLowerInvariant()))
+            continue;
+
+        var title = trackNumberPattern.Replace(Path.GetFileNameWithoutExtension(file.Name), "").Trim();
+        tracks.Add(new Track(title, file.FullName));
+    }
+    return tracks;
+}
+
+// Walk the folder structure: Artist/Album/Track, or Artist/Track for flat folders (mixes)
 var artists = new List<Artist>();
 foreach (var artistDir in musicDir.GetDirectories().OrderBy(d => d.Name))
 {
     var albums = new List<Album>();
+
+    // Standard Artist/Album/Track structure
     foreach (var albumDir in artistDir.GetDirectories().OrderBy(d => d.Name))
     {
-        var tracks = new List<Track>();
-        foreach (var file in albumDir.GetFiles().OrderBy(f => f.Name))
-        {
-            if (!musicExtensions.Contains(file.Extension.ToLowerInvariant()))
-                continue;
-
-            // Strip extension and leading track number to get a clean title
-            var title = trackNumberPattern.Replace(Path.GetFileNameWithoutExtension(file.Name), "").Trim();
-            tracks.Add(new Track(title, file.Name));
-        }
+        var tracks = ScanTracks(albumDir);
         if (tracks.Count > 0)
             albums.Add(new Album(albumDir.Name, tracks));
     }
+
+    // Flat folders with music files directly in them (e.g. mixes, soundtracks)
+    var directTracks = ScanTracks(artistDir);
+    if (directTracks.Count > 0)
+        albums.Add(new Album(artistDir.Name, directTracks));
+
     if (albums.Count > 0)
         artists.Add(new Artist(artistDir.Name, albums));
 }
 
-
+// Print summary to console
 foreach (var artist in artists)
 {
     Console.WriteLine(artist.Name);
@@ -79,7 +99,8 @@ if (string.IsNullOrEmpty(apiKey)) throw new InvalidOperationException("Set Anthr
 
 Console.WriteLine("\nCategorizing tracks with Claude...\n");
 
-// Build a lookup from normalized title to file path: "artistname|tracktitle" -> full file path
+// Build a lookup: normalized "artistname|tracktitle" -> full file path
+// Bracket suffixes like [Live] are stripped so both sides match the same way
 var fileLookup = new Dictionary<string, string>();
 foreach (var artist in artists)
 {
@@ -87,9 +108,8 @@ foreach (var artist in artists)
     {
         foreach (var track in album.Tracks)
         {
-            var key = Normalize($"{artist.Name}|{track.Title}");
-            var filePath = Path.Combine(musicPath, artist.Name, album.Name, track.FileName);
-            fileLookup.TryAdd(key, filePath);
+            var key = NormalizeTrackKey(artist.Name, track.Title);
+            fileLookup.TryAdd(key, track.FilePath);
         }
     }
 }
@@ -128,7 +148,7 @@ var parameters = new MessageCreateParams
     Messages = [new() { Role = Role.User, Content = prompt }]
 };
 
-// Stream the response, capturing the full text for parsing afterwards
+// Stream the response to console, capturing the full text for parsing afterwards
 var responseBuilder = new System.Text.StringBuilder();
 await foreach (var streamEvent in client.Messages.CreateStreaming(parameters))
 {
@@ -141,12 +161,15 @@ await foreach (var streamEvent in client.Messages.CreateStreaming(parameters))
 }
 Console.WriteLine();
 
-// Parse response lines like "Artist — Track [Cat1, Cat2]" and create playlist folders
+// Parse response and copy tracks into category folders
+// Each line looks like: "Artist — Track [Cat1, Cat2]"
 var outputPath = Path.Combine(Directory.GetCurrentDirectory(), "output");
-var linePattern = new Regex(@"^(.+?)\s*[—–-]\s*(.+?)\s*\[(.+?)\]", RegexOptions.Multiline);
-var matches = linePattern.Matches(responseBuilder.ToString());
+if (Directory.Exists(outputPath))
+    Directory.Delete(outputPath, recursive: true);
 
-// Map category short names back to folder names
+var linePattern = new Regex(@"^(.+?)\s*[—–-]\s*(.+)\s+\[([^\]]+)\]\s*$", RegexOptions.Multiline);
+
+// Map the various short names Claude might use back to consistent folder names
 var categoryFolders = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
 {
     ["canonical"] = "Most Canonical",
@@ -165,26 +188,33 @@ var categoryFolders = new Dictionary<string, string>(StringComparer.OrdinalIgnor
 };
 
 var copiedCount = 0;
-foreach (Match match in matches)
+foreach (Match match in linePattern.Matches(responseBuilder.ToString()))
 {
     var artistName = match.Groups[1].Value.Trim();
-    var trackTitle = match.Groups[2].Value.Trim();
+    var trackTitle = StripBrackets(match.Groups[2].Value).Trim();
     var categories = match.Groups[3].Value.Split(',').Select(c => c.Trim());
 
-    // Look up the actual file using normalized matching
-    var key = Normalize($"{artistName}|{trackTitle}");
-    if (!fileLookup.TryGetValue(key, out var sourceFile) || !File.Exists(sourceFile))
+    // Prefix match handles Claude stripping suffixes like "- Remastered" from track names
+    var key = NormalizeTrackKey(artistName, trackTitle);
+    var sourceFile = fileLookup.FirstOrDefault(kv => kv.Key.StartsWith(key)).Value;
+    if (sourceFile is null || !File.Exists(sourceFile))
+    {
+        Console.WriteLine($"  WARNING: No file match for \"{artistName} — {trackTitle}\" (key: {key})");
         continue;
+    }
 
     foreach (var category in categories)
     {
         if (!categoryFolders.TryGetValue(category, out var folderName))
+        {
+            Console.WriteLine($"  WARNING: Unknown category \"{category}\" for {artistName} — {trackTitle}");
             continue;
+        }
 
         var destDir = Path.Combine(outputPath, folderName);
         Directory.CreateDirectory(destDir);
 
-        var destFile = Path.Combine(destDir, $"{artistName} - {trackTitle}{Path.GetExtension(sourceFile)}");
+        var destFile = Path.Combine(destDir, $"{artistName} - {Path.GetFileName(sourceFile)}");
         if (!File.Exists(destFile))
         {
             File.Copy(sourceFile, destFile);
@@ -195,14 +225,24 @@ foreach (Match match in matches)
 
 Console.WriteLine($"\nCopied {copiedCount} tracks into {outputPath}");
 
-// Strip non-alphanumeric chars and lowercase for fuzzy matching
+// --- Helpers ---
+
+// Normalize to lowercase alphanumeric for fuzzy matching, keeping | as artist/track separator
 static string Normalize(string s) => Regex.Replace(s.ToLowerInvariant(), @"[^a-z0-9|]", "");
+
+// Build a normalized lookup key, stripping [bracketed] suffixes like [Live] first
+static string NormalizeTrackKey(string artist, string title) =>
+    Normalize($"{artist}|{StripBrackets(title)}");
+
+// Remove square bracket suffixes like [Live], [Remastered] from track titles
+static string StripBrackets(string s) => Regex.Replace(s, @"\s*\[[^\]]*\]", "");
 
 static string CsvEscape(string field) =>
     field.Contains(',') || field.Contains('"') || field.Contains('\n')
         ? $"\"{field.Replace("\"", "\"\"")}\""
         : field;
 
-record Track(string Title, string FileName);
+// Track stores the clean title and full file path for direct access
+record Track(string Title, string FilePath);
 record Album(string Name, List<Track> Tracks);
 record Artist(string Name, List<Album> Albums);
