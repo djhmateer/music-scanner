@@ -17,4 +17,4 @@ After this I'm going to go out to an LLM to find
 - 80's music
 - 90 music
 
-etc..
+I actually 
