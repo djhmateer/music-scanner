@@ -169,6 +169,12 @@ var prompt = $"""
     Only include tracks that fit at least one category. Use ALL categories.
     """;
 
+// Write the fully-rendered prompt to a file for review
+var promptPath = Path.Combine(Directory.GetCurrentDirectory(), "prompt.txt");
+File.WriteAllText(promptPath, prompt);
+Console.WriteLine($"Prompt written to {promptPath}");
+// return;
+
 var client = new AnthropicClient() { ApiKey = apiKey };
 var parameters = new MessageCreateParams
 {

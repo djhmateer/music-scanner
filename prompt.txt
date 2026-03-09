@@ -1,0 +1,296 @@
+Categorize each track into one or more categories. Score each 1-100 (unique scores, no ties, use the full range).
+
+Categories:
+- Wife Playlist (upbeat, joyful, funky, soulful, sing-along, danceable — she loves Cat Empire, Nina Simone, Aretha Franklin, Gnarls Barkley, Pharrell, Michael Jackson, Queen, Britney, James Brown, Tina Turner, Elton John, Fatboy Slim, Billy Joel, Bowie)
+- Kids Playlist (for kids aged 9-12 who want bangers — upbeat, high-energy, danceable, fun tracks with a beat. No lullabies, no gentle soundtrack songs. Think party anthems, pop hits, and tracks that make you want to jump around)
+- Chill (mellow, relaxed, reflective)
+- Anthems (big singalong tracks everyone knows — massive choruses, fist-pumping, crowd unifiers)
+
+Tracks:
+- AC_DC — Hells Bells
+- AC_DC — Shoot To Thrill
+- AC_DC — What Do You Do For Money Honey
+- AC_DC — Giving The Dog A Bone
+- AC_DC — Let Me Put My Love Into You
+- AC_DC — Back In Black
+- AC_DC — You Shook Me All Night Long
+- AC_DC — Have A Drink On Me
+- AC_DC — Shake A Leg
+- AC_DC — Rock And Roll Ain't Noise Polluti
+- AC_DC — Thunder Struck
+- AC_DC — Rock N' Roll Train
+- AC_DC — Skies On Fire
+- AC_DC — Big Jack
+- AC_DC — War Machine
+- AC_DC — Smash 'N' Grab
+- AC_DC — Spoilin' For A Fight
+- AC_DC — Wheels
+- AC_DC — Decibel
+- AC_DC — Anything Goes
+- AC_DC — Stormy May Day
+- AC_DC — She Likes Rock 'N' Roll
+- AC_DC — Money Made
+- AC_DC — Rock 'N' Roll Dream
+- AC_DC — Rocking All The Way
+- AC_DC — Black Ice
+- Aerosmith — Intro
+- Aerosmith — Eat The Rich
+- Aerosmith — Get A Grip
+- Aerosmith — Fever
+- Aerosmith — Livin' On The Edge
+- Aerosmith — Flesh
+- Aerosmith — Walk On Down
+- Aerosmith — Shut Up And Dance
+- Aerosmith — Cryin'
+- Aerosmith — Gotta Love It
+- Aerosmith — Crazy
+- Aerosmith — Line Up
+- Aerosmith — Amazing
+- Aerosmith — Boogie Man
+- Aerosmith — Boogie Man
+- Aerosmith — Nine Lives
+- Aerosmith — Falling In Love (Is Hard On The K
+- Aerosmith — Hole In My Soul
+- Aerosmith — Taste Of India
+- Aerosmith — Full Circle
+- Aerosmith — Something's Gotta Give
+- Aerosmith — Ain't That A Bitch
+- Aerosmith — The Farm
+- Aerosmith — Crash
+- Aerosmith — Kiss Your Past Good-Bye
+- Aerosmith — Pink
+- Aerosmith — Attitude Adjustment
+- Aerosmith — Fallen Angels
+- Aerosmith — Eat the Rich
+- Aerosmith — Let the Music Do the Talking
+- Aerosmith — Love Me Two Times
+- Aerosmith — My Fist Your Face
+- Aerosmith — Head First
+- Aerosmith — Shame on You
+- Aerosmith — Heart's Done Time
+- Aerosmith — Livin' on the Edge [Acoustic Vers
+- Aerosmith — Don't Stop
+- Aerosmith — Rag Doll
+- Aerosmith — Can't Stop Messin'
+- Aerosmith — Dude (Looks Like a Lady)
+- Aerosmith — Amazing [Orchestral Version]
+- Aerosmith — Angel
+- Aerosmith — Cryin'
+- Aerosmith — Hangman Jury
+- Aerosmith — Crazy
+- Aerosmith — Permanent Vacation
+- Aerosmith — Shut Up and Dance
+- Aerosmith — Young Lust
+- Aerosmith — Deuces Are Wild
+- Aerosmith — The Other Side
+- Aerosmith — Walk on Water
+- Aerosmith — What It Takes
+- Aerosmith — Blind Man
+- Aerosmith — Monkey on My Back
+- Aerosmith — Falling in Love (Is Hard on the K
+- Aerosmith — Love in an Elevator
+- Aerosmith — Dream On [Live]
+- Aerosmith — Janie's Got a Gun
+- Aerosmith — Ain't Enough
+- Aerosmith — Hole in My Soul [Live]
+- Aerosmith — Sweet Emotion [Live]
+- Aerosmith — Walk This Way
+- Airbourne — Stand Up for Rock 'n' Roll
+- Airbourne — Runnin' Wild
+- Airbourne — Too Much, Too Young, Too Fast
+- Airbourne — Diamond in the Rough
+- Airbourne — Fat City
+- Airbourne — Blackjack
+- Airbourne — What's Eatin' You
+- Airbourne — Girls in Black
+- Airbourne — Cheap Wine & Cheaper Women
+- Airbourne — Heartbreaker
+- Airbourne — Let's Ride
+- Alabama Shakes — Sound & Color
+- Alabama Shakes — Don't Wanna Fight
+- Alabama Shakes — Dunes
+- Alabama Shakes — Future People
+- Alabama Shakes — Gimme All Your Love
+- Alabama Shakes — This Feeling
+- Alabama Shakes — Guess Who
+- Alabama Shakes — The Greatest
+- Alabama Shakes — Shoegaze
+- Alabama Shakes — Miss You
+- Alabama Shakes — Gemini
+- Alabama Shakes — Over My Head
+- Alanis Morissette — All I Really Want
+- Alanis Morissette — You Oughta Know
+- Alanis Morissette — Perfect
+- Alanis Morissette — Hand in My Pocket
+- Alanis Morissette — Right Through You
+- Alanis Morissette — Forgiven
+- Alanis Morissette — You Learn
+- Alanis Morissette — Head over Feet
+- Alanis Morissette — Mary Jane
+- Alanis Morissette — Ironic
+- Alanis Morissette — Not the Doctor
+- Alanis Morissette — Wake Up
+- Alanis Morissette — You Oughta Know
+- Alex Lloyd — Everybody's Laughing
+- Alex Lloyd — Green
+- Alex Lloyd — Trigger
+- Alex Lloyd — My Friend
+- Alex Lloyd — Lost In The Rain
+- Alex Lloyd — Sleep
+- Alex Lloyd — Amazing
+- Alex Lloyd — Downtown
+- Alex Lloyd — Bus Ride
+- Alex Lloyd — Burn
+- Alex Lloyd — Easy Exit Station
+- Alien Ant Farm — Courage
+- Alien Ant Farm — Movies
+- Alien Ant Farm — Flesh And Bone
+- Alien Ant Farm — Whisper
+- Alien Ant Farm — Summer
+- Alien Ant Farm — Sticks And Stones
+- Alien Ant Farm — Attitude
+- Alien Ant Farm — Stranded
+- Alien Ant Farm — Wish
+- Alien Ant Farm — Calico
+- Alien Ant Farm — Death Day
+- Alien Ant Farm — Happy Death Day
+- Alien Ant Farm — Smooth Criminal
+- Alien Ant Farm — Universe
+- DE Wedding Field — Baby One More Time
+- DE Wedding Field — A Little Respect - 2009 Remastered Version
+- DE Wedding Field — A Message to You Rudy - 2002 Remaster
+- DE Wedding Field — Bitter Sweet Symphony
+- DE Wedding Field — Celebration - Single Version
+- DE Wedding Field — Daddy Cool
+- DE Wedding Field — Don't Stop Believin'
+- DE Wedding Field — Footloose
+- DE Wedding Field — Here Comes the Sun - Remastered
+- DE Wedding Field — I Got You (I Feel Good)
+- DE Wedding Field — Livin On A Prayer
+- DE Wedding Field — Macarena
+- DE Wedding Field — Never Gonna Give You Up
+- DE Wedding Field — Play That Funky Music
+- DE Wedding Field — Respect
+- DE Wedding Field — Rolling in the Deep
+- DE Wedding Field — Tainted Love (Re-Recorded _ Remastered)
+- DE Wedding Field — Take On Me
+- DE Wedding Field — The Best - Edit
+- DE Wedding Field — The Grease Mega-Mix
+- DE Wedding Field — Wake Me up Before You Go-Go
+- DE Wedding Field — Wannabe
+- DE Wedding Field — YMCA - Original Version 1978
+- DE Wedding Field — You Spin Me Round (Like a Record)
+- DE Wedding Field — Dancing Queen
+- DE Wedding Field — Girls Just Want to Have Fun
+- DE Wedding Field — I'm Still Standing
+- DE Wedding Field — Le Freak
+- DE Wedding Field — Praise You - Radio Edit
+- DE Wedding Field — Stars
+- DE Wedding Field — U Can't Touch This
+- DE Wedding Field — You Took the Words Right Out of My Mouth (Hot Summer Night)
+- DE Wedding Field — Just A Girl
+- DE Wedding Field — Sweet Dreams (Are Made of This) - Remastered
+- DE Wedding Field — Teenage Dirtbag
+- DE Wedding Field — Uptown Girl
+- DE Wedding Field — Walk Of Life
+- DE Wedding Field — Hot Stuff - 12_ Version
+- DE Wedding Field — I Believe In A Thing Called Love
+- DE Wedding Field — Life On Mars_ - 2015 Remastered Version
+- DE Wedding Field — The Time Warp
+- DE Wedding Field — Uptown Funk
+- DE Wedding Field — Happy - From _Despicable Me 2_
+- DE Wedding Field — You Sexy Thing
+- DE Wedding Field — Good Vibrations - Remastered
+- DE Wedding Field — Johnny B. Goode
+- DE Wedding Field — Superstition
+- DE Wedding Field — Unbelievable
+- DE Wedding Field — I Wan'na Be Like You (The Monkey Song) - From _The Jungle Boo
+- DE Wedding Field — You're Welcome
+- DE Wedding Field — Funky Town
+- DE Wedding Field — I'm On My Way
+- DE Wedding Field — Give It Away
+- DE Wedding Field — Don't You Want Me
+- DE Wedding Field — Man! I Feel Like A Woman!
+- DE Wedding Field — Girls Just Want to Have Fun
+- DE Wedding Field — I'm a Believer
+- DE Wedding Field — Gimme! Gimme! Gimme! (A Man After Midnight)
+- DE Wedding Field — Stayin' Alive - From _Saturday Night Fever_ Soundtrack
+- DE Wedding Field — Suspicious Minds
+- DE Wedding Field — Twist And Shout - Remastered 2009
+- DE Wedding Field — Material Girl
+- DE Wedding Field — Oh, Pretty Woman
+- DE Wedding Field — Shout
+- frozen — Frozen Heart - From _Frozen__Soundtrack Version
+- frozen — Do You Want to Build a Snowman_ - From _Frozen__Soundtrack Ve
+- frozen — For the First Time in Forever - From _Frozen__Soundtrack Vers
+- frozen — Love Is an Open Door - From _Frozen__Soundtrack Version
+- frozen — Let It Go - From _Frozen__Soundtrack Version
+- frozen — Reindeer(s) Are Better Than People - From _Frozen_ _ Soundtra
+- frozen — In Summer - From _Frozen__Soundtrack Version
+- frozen — For the First Time in Forever (Reprise) - From _Frozen__Sound
+- frozen — Fixer Upper - From _Frozen__Soundtrack Version
+- frozen — Let It Go - From _Frozen _ Single Version
+- frozen — Vuelie - From _Frozen__Score
+- frozen — Elsa and Anna - From _Frozen__Score
+- frozen — The Trolls - From _Frozen__Score
+- frozen — Coronation Day - From _Frozen__Score
+- frozen — Heimr Àrnadalr - From _Frozen__Score
+- frozen — Winter's Waltz - From _Frozen__Score
+- frozen — Sorcery - From _Frozen__Score
+- frozen — Royal Pursuit - From _Frozen__Score
+- frozen — Onward and Upward - From _Frozen__Score
+- frozen — Wolves - From _Frozen__Score
+- frozen — The North Mountain - From _Frozen__Score
+- frozen — We Were So Close - From _Frozen__Score
+- frozen — Marshmallow Attack! - From _Frozen__Score
+- frozen — Conceal, Don't Feel - From _Frozen__Score
+- frozen — Only An Act of True Love - From _Frozen__Score
+- frozen — Summit Siege - From _Frozen__Score
+- frozen — Return to Arendelle - From _Frozen__Score
+- frozen — Treason - From _Frozen__Score
+- frozen — Some People Are Worth Melting For - From _Frozen__Score
+- frozen — Whiteout - From _Frozen__Score
+- frozen — The Great Thaw (Vuelie Reprise) - From _Frozen__Score
+- Moana — Tulou Tagaloa
+- Moana — An Innocent Warrior
+- Moana — Where You Are
+- Moana — How Far I'll Go
+- Moana — We Know The Way
+- Moana — How Far I'll Go - Reprise
+- Moana — You're Welcome
+- Moana — Shiny
+- Moana — Logo Te Pate
+- Moana — I Am Moana (Song of the Ancestors)
+- Moana — Know Who You Are
+- Moana — We Know The Way - Finale
+- Moana — How Far I'll Go - Alessia Cara Version
+- Moana — You're Welcome - Jordan Fisher_Lin-Manuel Miranda Version
+- Moana — Prologue
+- Moana — He Was You
+- Moana — Village Crazy Lady
+- Moana — Cavern
+- Moana — The Ocean Chose You
+- Moana — The Hook
+- Moana — Tala's Deathbed
+- Moana — Battle of Wills
+- Moana — Kakamora
+- Moana — Wayfinding
+- Moana — Climbing
+- Moana — Tamatoa's Lair
+- Moana — Great Escape
+- Moana — If I Were the Ocean
+- Moana — Te Ka Attacks
+- Moana — Maui Leaves
+- Moana — Heartache
+- Moana — Tala Returns
+- Moana — Sails to Te Fiti
+- Moana — Shiny Heart
+- Moana — Te Fiti Restored
+- Moana — Hand of a God
+- Moana — Voyager Tagaloa
+- Moana — Toe Feiloa'i
+- Moana — Navigating Home
+- Moana — The Return to Voyaging
+
+Format: Artist — Track [Category:score, Category:score]
+Only include tracks that fit at least one category. Use ALL categories.
