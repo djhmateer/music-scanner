@@ -131,12 +131,22 @@ var prompt = $"""
     - Her favourite artists include: Cat Empire, Nina Simone, Aretha Franklin, Gnarls Barkley, Pharrell Williams (Happy), modern Take That, Michael Jackson, Queen, Britney Spears, James Brown, Tina Turner, Elton John, Fatboy Slim, Flaming Lips, Billy Joel, David Bowie.
     - Prioritise songs that are upbeat, joyful, funky, soulful, sing-along, or danceable.
     - Include songs with strong groove, iconic pop hooks, or big personality.
+    7. Kids Playlist
+    - Songs that kids aged 9 and 12 would enjoy.
+    - Fun, energetic, silly, or anthemic songs they can sing along to.
+    - Include movie/soundtrack songs, party bangers, and anything with a big chorus or infectious beat.
+    - Avoid anything with explicit or adult themes.
+    8. Chill / Wind Down (mellow, relaxed, evening listening — ballads, slower tempos, reflective mood)
+    9. Road Trip (high-energy singalong driving anthems — big choruses, feel-good, windows-down energy)
+    10. Guilty Pleasures (cheesy, campy, or so-bad-it's-good tracks that everyone secretly loves)
+    11. Workout (high BPM, aggressive energy, pump-up tracks)
 
     Tracks:
     {trackList}
 
     Respond with a simple list: each track on one line, followed by its categories in brackets.
-    Example: Artist — Track [Canonical, Kitchen Playlist]
+    For each category, add a confidence score 1-10 after a colon (10 = strongest fit).
+    Example: Artist — Track [Canonical:8, Wife Playlist:9, Kitchen Playlist:7]
     Only include tracks that fit at least one category. Be selective.
     """;
 
@@ -144,7 +154,7 @@ var client = new AnthropicClient() { ApiKey = apiKey };
 var parameters = new MessageCreateParams
 {
     Model = Model.ClaudeHaiku4_5,
-    MaxTokens = 4096,
+    MaxTokens = 8192,
     Messages = [new() { Role = Role.User, Content = prompt }]
 };
 
@@ -185,9 +195,20 @@ var categoryFolders = new Dictionary<string, string>(StringComparer.OrdinalIgnor
     ["90s music"] = "90s Music",
     ["wife"] = "Wife Playlist",
     ["wife playlist"] = "Wife Playlist",
+    ["kids"] = "Kids Playlist",
+    ["kids playlist"] = "Kids Playlist",
+    ["chill"] = "Chill",
+    ["chill / wind down"] = "Chill",
+    ["wind down"] = "Chill",
+    ["road trip"] = "Road Trip",
+    ["guilty pleasures"] = "Guilty Pleasures",
+    ["guilty"] = "Guilty Pleasures",
+    ["workout"] = "Workout",
 };
 
-var copiedCount = 0;
+// First pass: parse all matches into per-folder track lists with scores
+var playlistTracks = new Dictionary<string, List<(int Score, string ArtistName, string SourceFile)>>();
+
 foreach (Match match in linePattern.Matches(responseBuilder.ToString()))
 {
     var artistName = match.Groups[1].Value.Trim();
@@ -203,23 +224,43 @@ foreach (Match match in linePattern.Matches(responseBuilder.ToString()))
         continue;
     }
 
-    foreach (var category in categories)
+    foreach (var rawCategory in categories)
     {
+        // Split "Wife Playlist:9" into category name and score
+        var parts = rawCategory.Split(':');
+        var category = parts[0].Trim();
+        var score = parts.Length > 1 && int.TryParse(parts[1].Trim(), out var s) ? s : 0;
+
         if (!categoryFolders.TryGetValue(category, out var folderName))
         {
             Console.WriteLine($"  WARNING: Unknown category \"{category}\" for {artistName} — {trackTitle}");
             continue;
         }
 
-        var destDir = Path.Combine(outputPath, folderName);
-        Directory.CreateDirectory(destDir);
+        if (!playlistTracks.ContainsKey(folderName))
+            playlistTracks[folderName] = [];
 
-        var destFile = Path.Combine(destDir, $"{artistName} - {Path.GetFileName(sourceFile)}");
+        playlistTracks[folderName].Add((score, artistName, sourceFile));
+    }
+}
+
+// Second pass: copy tracks into folders, sorted by score (highest first), numbered sequentially
+var copiedCount = 0;
+foreach (var (folderName, tracks) in playlistTracks)
+{
+    var destDir = Path.Combine(outputPath, folderName);
+    Directory.CreateDirectory(destDir);
+
+    var rank = 1;
+    foreach (var (score, artistName, sourceFile) in tracks.OrderByDescending(t => t.Score))
+    {
+        var destFile = Path.Combine(destDir, $"{rank:D2} {artistName} - {Path.GetFileName(sourceFile)}");
         if (!File.Exists(destFile))
         {
             File.Copy(sourceFile, destFile);
             copiedCount++;
         }
+        rank++;
     }
 }
 
